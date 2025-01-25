@@ -1,33 +1,46 @@
 import PropTypes from "prop-types";
 import React, {useState, useEffect, useContext, useActionState}from "react";
 import { Context } from "../store/appContext"
+import {Link} from "react-router-dom"
 
-export const Card = ({titulo, url, caracteristica1, caracteristica2, caracteristica3}) => {
+export const Card = (props) => {
    const {store, actions} = useContext(Context)
-   
-    const info = store.info
-    console.log(info)
+   const [character, setCharacter] = useState([]);
+   const [type,setType] = useState([])
+   console.log(props.type)
 
-    useEffect(()=>{
-        actions.getInfo(url)
-    },[])
+    useEffect(() => {
+        async function loadCharacter(){
+                try{
+                    const resp = await fetch(`${props.item.url}`)
+                    const data = await resp.json()
+                    setCharacter(data.result.properties)
+                }catch(err){
+                    console.log(err)
+                }
+            }
+            loadCharacter();
+    }, [])
+    
 
 
     return(
         <>
             <div classname="card" style={{"width": "18rem"}}>
-                <img src="..." class="card-img-top" alt="..."/>
+                <img src={`https://starwars-visualguide.com/assets/img/${type}/${props.item.uid}.jpg`} class="card-img-top" alt="..."/>
                 <div class="card-body">
-                    <h5 class="card-title">{titulo}</h5>
+                    <h5 class="card-title">{props.item.name}</h5>
                     <ul>
-                        {/* <li>{info.gender}</li>
-                        <li>{info.height}</li>
-                        <li>{info.eye_color}</li> */}
+                        <li>{character.gender}</li>
+                        <li>{character.height}</li>
+                        <li>{character.eye_color}</li>
                     </ul>
                     <div className="buttons">
-                    <button type="button" class="btn btn-primary">detalles</button>
+                    <Link to={"/details/" + props.item.uid}>
+                        <button type="button" class="btn btn-primary">detalles</button>
+                    </Link>
 
-                    <button type="button" class="btn btn-warning">like</button>
+                    <button type="button" class="btn btn-warning" onClick={()=> actions.addToCart(props.item)}>like</button>
                     </div>
                 </div>
             </div>
@@ -35,9 +48,3 @@ export const Card = ({titulo, url, caracteristica1, caracteristica2, caracterist
     )
 }
 
-Card.propTypes = {
-    titulo: PropTypes.string,
-    caracteristica1: PropTypes.string,
-    caracteristica2: PropTypes.string,
-    caracteristica3: PropTypes.string,
-}

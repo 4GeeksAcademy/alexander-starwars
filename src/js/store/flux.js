@@ -3,8 +3,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 		store: {
 
 			URL_BASE: "https://www.swapi.tech/api",
+			carrito:[],
 			personas: [],
-			info: [],
+			
 		
 		},
 
@@ -19,17 +20,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			getInfo: async (url) => {
-				const store = getStore()
-				let response = await fetch(`${url}/`);
-				if(response.ok){
-					let body = await response.json()
-					setStore({
-						...store,
-						info:body.result})
+			addToCart: newItem => {
+				const store = getStore();
+				if(!store.carrito.find(item => item.uid == newItem.uid)){
+					setStore({carrito:[newItem, ...store.carrito]})
 				}
 			},
 
+			removeFromCart: targetItem => {
+				const store = getStore();
+				setStore({carrito: store.carrito.filter(item => item.uid != targetItem.uid)})
+			}
+
+			
 			
 
 

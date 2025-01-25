@@ -7,8 +7,8 @@ export const Peoplecards = () => {
     return(
     
     <div>
-        {store.personas && store.personas.map((people, index)=>{
-            return <Card key={people.name} url={people.url} titulo={people.name}/>
+        {store.personas && store.personas.map((item, index)=>{
+            return <Card key={index} item={item} type={"planets"}/>
         })}
     </div>
 

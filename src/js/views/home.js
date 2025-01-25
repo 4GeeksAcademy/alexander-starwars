@@ -8,7 +8,5 @@ export const Home = () => (
 	<>
 		{/* <Card/> */}
 		<Peoplecards/>
-		<Details/>
-
 	</>
 );
